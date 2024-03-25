@@ -16,9 +16,83 @@ extension String: LoremIpsumize {
     }
 }
 
+// MARK: - Int Extensions
+
 extension Int: LoremIpsumize {
     public static func lorem() -> Int {
         faker.number.randomInt()
+    }
+}
+
+extension Int8: LoremIpsumize {
+    public static func lorem() -> Int8 {
+        Int8.max
+    }
+}
+
+extension Int16: LoremIpsumize {
+    public static func lorem() -> Int16 {
+        Int16.max
+    }
+}
+
+extension Int32: LoremIpsumize {
+    public static func lorem() -> Int32 {
+        Int32.max
+    }
+}
+
+extension Int64: LoremIpsumize {
+    public static func lorem() -> Int64 {
+        Int64.max
+    }
+}
+
+// -------------------------
+
+// MARK: - UInt Extensions
+
+extension UInt: LoremIpsumize {
+    public static func lorem() -> UInt {
+        UInt.max
+    }
+}
+
+extension UInt8: LoremIpsumize {
+    public static func lorem() -> UInt8 {
+        UInt8.max
+    }
+}
+
+extension UInt16: LoremIpsumize {
+    public static func lorem() -> UInt16 {
+        UInt16.max
+    }
+}
+
+extension UInt32: LoremIpsumize {
+    public static func lorem() -> UInt32 {
+        UInt32.max
+    }
+}
+
+extension UInt64: LoremIpsumize {
+    public static func lorem() -> UInt64 {
+        UInt64.max
+    }
+}
+
+// -------------------------
+
+extension Double: LoremIpsumize {
+    public static func lorem() -> Double {
+        faker.number.randomDouble()
+    }
+}
+
+extension Float: LoremIpsumize {
+    public static func lorem() -> Float {
+        faker.number.randomFloat()
     }
 }
 
