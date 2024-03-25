@@ -28,22 +28,16 @@ enum LoremSwiftifyMacroDiagnostic: DiagnosticMessage, Error {
     var severity: SwiftDiagnostics.DiagnosticSeverity { .error }
 }
 
-public enum LoremSwiftifyMacro: ExtensionMacro {
-    // MARK: - Extension expansion
+public enum LoremSwiftifyMacro: MemberMacro {
     public static func expansion(
-        of node: SwiftSyntax.AttributeSyntax,
-        attachedTo declaration: some SwiftSyntax.DeclGroupSyntax,
-        providingExtensionsOf type: some SwiftSyntax.TypeSyntaxProtocol,
-        conformingTo protocols: [SwiftSyntax.TypeSyntax],
-        in context: some SwiftSyntaxMacros.MacroExpansionContext
-    ) throws -> [SwiftSyntax.ExtensionDeclSyntax] {
-
+        of node: AttributeSyntax,
+        providingMembersOf declaration: some DeclGroupSyntax,
+        in context: some MacroExpansionContext
+    ) throws -> [DeclSyntax] {
         if let classDecl = declaration.as(ClassDeclSyntax.self) {
             return try LoremSwiftifyClass.expansion(
                 of: node,
-                attachedTo: classDecl,
-                providingExtensionsOf: type,
-                conformingTo: protocols,
+                providingMembersOf: classDecl,
                 in: context
             )
         }
@@ -51,9 +45,7 @@ public enum LoremSwiftifyMacro: ExtensionMacro {
         if let structDecl = declaration.as(StructDeclSyntax.self) {
             return try LoremSwiftifyStruct.expansion(
                 of: node,
-                attachedTo: structDecl,
-                providingExtensionsOf: type,
-                conformingTo: protocols,
+                providingMembersOf: structDecl,
                 in: context
             )
         }

@@ -37,7 +37,6 @@ enum LoremSwiftifyMacroParsingShared {
         }
 
         let funcDecl = try FunctionDeclSyntax("static func lorem() -> Self") {
-            //            "\(raw: declaration.debugDescription)"
             StmtSyntax(stringLiteral: funcBody)
         }
 

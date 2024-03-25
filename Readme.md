@@ -5,8 +5,10 @@
 ### Todos
 - [X] Support class
 - [X] Support struct
-- [ ] Support nested structs
-- [ ] Support nested classes
+- [ ] Support enum
+- [X] Support nested enums
+- [X] Support nested structs
+- [X] Support nested classes
 - [ ] Support more foundation types
 - [X] Custom types supported if it's annotated with macro or confirms `LoremIpsumize` protocol
 - [ ] Improve diagnostic
@@ -28,10 +30,9 @@ struct Person {
     var title: String = "DefaultTitle"
     let age: Int
     var isAdult = true
-}
 
-// Expands;
-extension Person: LoremIpsumize {
+    // Expands;
+    // Generated lorem
     static func lorem() -> Self {
         return Person(
             name: "Jamie",
@@ -48,40 +49,39 @@ extension Person: LoremIpsumize {
 
 ```swift
 @LoremSwiftify
-struct Author {
-    let name: String
-    let surname: String
-    var nickName: String?
-    let age: Int
-
-    init(name: String, surname: String, nickName: String? = nil, age: Int) {
-        self.name = name
-        self.surname = surname
-        self.nickName = nickName
-        self.age = age
-    }
-}
-
-@LoremSwiftify
 struct Book {
     let name: String
     let published: Date
     let author: Author
-}
 
-// Expands
-extension Author: LoremIpsumize {
-    static func lorem() -> Self {
-        return Author(
-            name: String.lorem(),
-            surname: String.lorem(),
-            nickName: nil,
-            age: Int.lorem()
-        )
+    @LoremSwiftify
+    struct Author {
+        let name: String
+        let surname: String
+        var nickName: String?
+        let age: Int
+
+        init(name: String, surname: String, nickName: String? = nil, age: Int) {
+            self.name = name
+            self.surname = surname
+            self.nickName = nickName
+            self.age = age
+        }
+        
+        // Expands;
+        // Generated lorem
+        static func lorem() -> Self {
+            return Author(
+                name: String.lorem(),
+                surname: String.lorem(),
+                nickName: nil,
+                age: Int.lorem()
+            )
+        }
     }
-}
-
-extension Book: LoremIpsumize {
+    
+    // Expands;
+    // Generated lorem
     static func lorem() -> Self {
         return Book(
             name: String.lorem(),
@@ -108,10 +108,9 @@ struct User {
         self.age = age
         self.isAdult = isAdult
     }
-}
 
-// Expands
-extension User: LoremIpsumize {
+    // Expands;
+    // Generated lorem
     static func lorem() -> Self {
         return User(
             name: "Lorie",

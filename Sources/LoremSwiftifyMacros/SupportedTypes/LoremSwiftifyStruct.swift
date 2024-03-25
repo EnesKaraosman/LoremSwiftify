@@ -12,21 +12,16 @@ import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
 
 class LoremSwiftifyStruct {
-    static func expansion(
-        of node: SwiftSyntax.AttributeSyntax,
-        attachedTo declaration: StructDeclSyntax,
-        providingExtensionsOf type: some SwiftSyntax.TypeSyntaxProtocol,
-        conformingTo protocols: [SwiftSyntax.TypeSyntax],
-        in context: some SwiftSyntaxMacros.MacroExpansionContext
-    ) throws -> [ExtensionDeclSyntax] {
+    public static func expansion(
+        of node: AttributeSyntax,
+        providingMembersOf declaration: StructDeclSyntax,
+        in context: some MacroExpansionContext
+    ) throws -> [DeclSyntax] {
         return [
-            try ExtensionDeclSyntax(
             """
-            extension \(raw: declaration.name.text): \(raw: protocolName)
+            // Generated lorem
+            \(try structDeclSyntax(declaration: declaration, in: context))
             """
-            ) {
-                "\(try structDeclSyntax(declaration: declaration, in: context))"
-            }
         ]
     }
 
