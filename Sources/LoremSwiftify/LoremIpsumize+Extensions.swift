@@ -30,7 +30,11 @@ extension Bool: LoremIpsumize {
 
 extension Date: LoremIpsumize {
     public static func lorem() -> Date {
-        Date.now
+        if #available(iOS 15, *) {
+            return Date.now
+        } else {
+            return Date()
+        }
     }
 }
 
