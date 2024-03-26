@@ -27,7 +27,9 @@ enum LoremSwiftifyMacroParsingShared {
             funcBody = fillInitCode(initName: selfName, parameters: parameters)
         } else {
             // There is no default init, so create one
-            let variableDecls = members.compactMap { $0.decl.as(VariableDeclSyntax.self) }
+            let variableDecls = members
+                .compactMap { $0.decl.as(VariableDeclSyntax.self) }
+                .filter(\.isStoredProperty)
 
             funcBody = generateInitCode(initName: selfName, variableDecls: variableDecls)
         }
