@@ -65,4 +65,16 @@ extension VariableDeclSyntax {
         }
 
     }
+
+    var initializer: InitializerClauseSyntax? {
+        bindings.compactMap { $0.initializer }.first
+    }
+
+    var isInitialized: Bool {
+        initializer != nil
+    }
+
+    var typeName: String {
+        bindings.first?.typeAnnotation?.type.as(IdentifierTypeSyntax.self)?.name.text ?? ""
+    }
 }

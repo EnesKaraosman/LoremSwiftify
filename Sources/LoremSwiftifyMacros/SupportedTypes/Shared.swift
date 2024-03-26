@@ -73,21 +73,12 @@ enum LoremSwiftifyMacroParsingShared {
     ) -> String {
         var initialCode: String = "return \(initName)("
 
-        for variable in variableDecls {
+        for variable in variableDecls where !variable.isInitialized {
             guard let pattern = variable.bindings.first?.pattern else { continue }
             let name = "\(pattern.trimmed)"
+            let type = variable.typeName
 
-            if let initializer = variable.bindings.first(where: { $0.initializer != nil })?.initializer {
-                initialCode.append("\n\(name): \(initializer.value), ")
-                continue
-            }
-
-            if let patternBindingSyntax = variable.bindings.first,
-               let type = patternBindingSyntax.typeAnnotation?.type.as(IdentifierTypeSyntax.self) {
-
-                let typeName = type.name.trimmed.text
-                initialCode.append("\n\(name): \(typeName).lorem(), ")
-            }
+            initialCode.append("\n\(name): \(type).lorem(), ")
         }
 
         initialCode = String(initialCode.dropLast(2))
