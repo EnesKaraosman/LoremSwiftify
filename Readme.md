@@ -16,6 +16,7 @@
     - [X] Double, Float
     - [X] Bool
     - [X] Array
+    - [X] Dictionary
     - [X] Date
     - [X] URL
     - [X] Color

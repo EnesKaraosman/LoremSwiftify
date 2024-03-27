@@ -10,9 +10,20 @@ import SwiftUI
 
 private let faker = Faker()
 
+extension Dictionary: LoremIpsumize where Key: LoremIpsumize, Value: LoremIpsumize {
+    public static func lorem() -> Dictionary<Key, Value> {
+        let count = Int.random(in: 2...10)
+
+        return (0..<count).reduce(into: [:]) { result, _ in
+            result[Key.lorem()] = Value.lorem()
+        }
+    }
+}
+
 extension Array: LoremIpsumize where Element: LoremIpsumize {
     public static func lorem() -> Array<Element> {
         let count = Int.random(in: 2...10)
+        
         return (1...count).indices.map { _ in
             Element.lorem()
         }
