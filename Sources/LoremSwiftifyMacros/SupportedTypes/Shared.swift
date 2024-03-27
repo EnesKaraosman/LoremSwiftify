@@ -50,14 +50,15 @@ enum LoremSwiftifyMacroParsingShared {
         initName: String,
         parameters: FunctionParameterListSyntax
     ) -> String {
-        var initialCode: String = "return \(initName)("
+        var initialCode: String = "\(initName)("
 
         for parameter in parameters {
             let name = parameter.firstName.text
-            let typeName = "\(parameter.type)"
 
-            let defaultValue = parameter.defaultValue?.value ?? "\(raw: typeName).lorem()"
-            initialCode.append("\n\(name): \(defaultValue), ")
+            let lorem = ".lorem()"
+
+            let value = parameter.defaultValue?.value ?? "\(raw: lorem)"
+            initialCode.append("\n\(name): \(value), ")
         }
 
         initialCode = String(initialCode.dropLast(2))
@@ -71,14 +72,15 @@ enum LoremSwiftifyMacroParsingShared {
         initName: String,
         variableDecls: [VariableDeclSyntax]
     ) -> String {
-        var initialCode: String = "return \(initName)("
+        var initialCode: String = "\(initName)("
 
         for variable in variableDecls where !variable.isInitialized {
             guard let pattern = variable.bindings.first?.pattern else { continue }
+            
             let name = "\(pattern.trimmed)"
-            let type = variable.typeName
 
-            initialCode.append("\n\(name): \(type).lorem(), ")
+            let lorem = ".lorem()"
+            initialCode.append("\n\(name): \(lorem), ")
         }
 
         initialCode = String(initialCode.dropLast(2))

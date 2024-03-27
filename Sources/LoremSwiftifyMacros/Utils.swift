@@ -77,4 +77,29 @@ extension VariableDeclSyntax {
     var typeName: String {
         bindings.first?.typeAnnotation?.type.as(IdentifierTypeSyntax.self)?.name.text ?? ""
     }
+
+    var isArray: Bool {
+        bindings
+            .first?
+            .typeAnnotation?.as(TypeAnnotationSyntax.self)?
+            .type.is(ArrayTypeSyntax.self) ?? false
+    }
+}
+
+extension TypeSyntax {
+    var isArray: Bool {
+        self.as(ArrayTypeSyntax.self) != nil
+    }
+
+    var isSimpleType: Bool {
+        self.as(IdentifierTypeSyntax.self) != nil
+    }
+
+    var isDictionary: Bool {
+        self.as(DictionaryTypeSyntax.self) != nil
+    }
+
+    var isOptional: Bool {
+        self.as(OptionalTypeSyntax.self) != nil
+    }
 }

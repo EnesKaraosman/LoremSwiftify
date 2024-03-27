@@ -33,17 +33,14 @@ struct Book {
 }
 
 @LoremSwiftify
-struct User {
+struct Hotel {
     let name: String
-    let surname: String
-    let age: Int
-    let isAdult: Bool
+    let rooms: [Room]
 
-    init(name: String, surname: String, age: Int, isAdult: Bool) {
-        self.name = name
-        self.surname = surname
-        self.age = age
-        self.isAdult = isAdult
+    @LoremSwiftify
+    struct Room {
+        let id: UUID
+        let capacity: Int
     }
 }
 
@@ -51,3 +48,4 @@ print(Person.lorem())
 print(Author.lorem())
 print(Book.lorem())
 print(User.lorem())
+print(Hotel.lorem())
