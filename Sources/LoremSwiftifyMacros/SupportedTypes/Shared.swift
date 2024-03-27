@@ -38,9 +38,17 @@ enum LoremSwiftifyMacroParsingShared {
             funcBody.append(" as! Self")
         }
 
-        let funcDecl = try FunctionDeclSyntax("static func lorem() -> Self") {
-            StmtSyntax(stringLiteral: funcBody)
-        }
+        let funcDecl = try FunctionDeclSyntax(
+            modifiers: [
+                .init(name: .identifier("static"))
+            ],
+            name: "lorem",
+            signature: FunctionSignatureSyntax(
+                parameterClause: FunctionParameterClauseSyntax(validating: .init(parameters: [])),
+                returnClause: ReturnClauseSyntax(type: IdentifierTypeSyntax(name: .identifier("Self")))
+            ),
+            body: CodeBlockSyntax(statements: .init(stringLiteral: funcBody))
+        )
 
         return DeclSyntax(funcDecl)
     }

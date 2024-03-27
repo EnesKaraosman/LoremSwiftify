@@ -15,28 +15,16 @@ class LoremSwiftifyStruct {
     public static func expansion(
         of node: AttributeSyntax,
         providingMembersOf declaration: StructDeclSyntax,
-        in context: some MacroExpansionContext
-    ) throws -> [DeclSyntax] {
-        return [
-            """
-            // Generated lorem
-            \(try structDeclSyntax(declaration: declaration, in: context))
-            """
-        ]
-    }
-
-    private static func structDeclSyntax(declaration: StructDeclSyntax, in context: some SwiftSyntaxMacros.MacroExpansionContext) throws -> DeclSyntax {
-
+        in context: some MacroExpansionContext,
+        type: some SwiftSyntax.TypeSyntaxProtocol
+    ) throws -> DeclSyntax {
         if declaration.memberBlock.members.isEmpty {
             context.diagnose(.init(node: declaration, message: LoremSwiftifyMacroDiagnostic.noMemberToMock))
         }
 
-        let members = declaration.memberBlock.members
-        let structName = declaration.name.text
-
         return try LoremSwiftifyMacroParsingShared.handleClassOrStructDeclSyntax(
-            selfName: structName,
-            members: members,
+            selfName: "\(type)",
+            members: declaration.memberBlock.members,
             in: context,
             isClass: false
         )
