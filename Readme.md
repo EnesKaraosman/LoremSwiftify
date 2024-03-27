@@ -6,10 +6,19 @@
 - [X] Support class
 - [X] Support struct
 - [ ] Support enum
-- [X] Support nested enums
+- [ ] Support nested enums
 - [X] Support nested structs
 - [X] Support nested classes
-- [ ] Support more foundation types
+- [X] Support commonly used types
+    - [X] String
+    - [X] Int, Int8, Int16, Int32, Int64
+    - [X] UInt, UInt8, UInt16, UInt32, UInt64
+    - [X] Double, Float
+    - [X] Bool
+    - [X] Array
+    - [X] Date
+    - [X] URL
+    - [X] Color
 - [X] Custom types supported if it's annotated with macro or confirms `LoremIpsumize` protocol
 - [ ] Improve diagnostic
 - [ ] Implement unit test

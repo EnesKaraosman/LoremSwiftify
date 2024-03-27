@@ -10,6 +10,21 @@ import SwiftUI
 
 private let faker = Faker()
 
+extension Array: LoremIpsumize where Element: LoremIpsumize {
+    public static func lorem() -> Array<Element> {
+        let count = Int.random(in: 2...10)
+        return (1...count).indices.map { _ in
+            Element.lorem()
+        }
+    }
+}
+
+extension UUID: LoremIpsumize {
+    public static func lorem() -> UUID {
+        UUID()
+    }
+}
+
 extension String: LoremIpsumize {
     public static func lorem() -> String {
         faker.lorem.word()
