@@ -3,12 +3,9 @@
 > This package is created to challange Swift Macros and it's under development. So currently support types are limited
 
 ### Todos
-- [X] Support class
-- [X] Support struct
-- [ ] Support enum
-- [ ] Support nested enums
-- [X] Support nested structs
-- [X] Support nested classes
+- [X] Support class (nesting is supported as well)
+- [X] Support struct (nesting is supported as well)
+- [X] Support enum (nesting is supported as well)
 - [X] Support commonly used types
     - [X] String
     - [X] Int, Int8, Int16, Int32, Int64

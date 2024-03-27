@@ -9,15 +9,18 @@ let protocolName = "LoremIpsumize"
 // TODO: Use better diagnostics
 // https://github.com/apple/swift-syntax/blob/main/Examples/Sources/MacroExamples/Implementation/Diagnostics.swift
 enum LoremSwiftifyMacroDiagnostic: DiagnosticMessage, Error {
-    case notAStructOrClass
+    case unsupportedType
     case noMemberToMock
+    case noEnumCase
 
     var message: String {
         switch self {
-        case .notAStructOrClass:
-            return "You can only lorem struct or class"
+        case .unsupportedType:
+            return "You can only lorem struct, class and enum"
         case .noMemberToMock:
             return "There is no member to lorem"
+        case .noEnumCase:
+            return "There is no enum case to lorem"
         }
     }
 
@@ -34,11 +37,13 @@ public enum LoremSwiftifyMacro: MemberMacro {
         providingMembersOf declaration: some DeclGroupSyntax,
         in context: some MacroExpansionContext
     ) throws -> [DeclSyntax] {
-        if !declaration.is(StructDeclSyntax.self) && !declaration.is(ClassDeclSyntax.self) {
+        if !declaration.is(StructDeclSyntax.self)
+            && !declaration.is(ClassDeclSyntax.self)
+            && !declaration.is(EnumDeclSyntax.self) {
 
-            context.diagnose(.init(node: declaration, message: LoremSwiftifyMacroDiagnostic.notAStructOrClass))
+            context.diagnose(.init(node: declaration, message: LoremSwiftifyMacroDiagnostic.unsupportedType))
 
-            throw LoremSwiftifyMacroDiagnostic.notAStructOrClass
+            throw LoremSwiftifyMacroDiagnostic.unsupportedType
         }
 
         return []
@@ -69,6 +74,15 @@ extension LoremSwiftifyMacro: ExtensionMacro {
                 try LoremSwiftifyStruct.expansion(
                     of: node,
                     providingMembersOf: structDecl,
+                    in: context,
+                    type: type
+                )
+            }
+
+            if let enumDecl = declaration.as(EnumDeclSyntax.self) {
+                try LoremSwiftifyEnum.expansion(
+                    of: node,
+                    providingMembersOf: enumDecl,
                     in: context,
                     type: type
                 )
