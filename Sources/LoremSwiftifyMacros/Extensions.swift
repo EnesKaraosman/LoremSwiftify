@@ -1,5 +1,5 @@
 //
-//  Utils.swift
+//  Extensions.swift
 //
 //
 //  Created by Enes Karaosman on 23.03.2024.
@@ -30,6 +30,27 @@ extension MemberBlockItemListSyntax {
 
     var hasClassMember: Bool {
         classDeclSyntax != nil
+    }
+}
+
+extension EnumCaseDeclSyntax {
+    var hasAssociatedValues: Bool {
+        self.elements.first?.parameterClause != nil
+    }
+
+    var name: String {
+        guard let caseName = self.elements.first?.name.text
+        else {
+            fatalError("Compiler Bug: Case name not found")
+        }
+
+        return caseName
+    }
+
+    var parameters: [(TokenSyntax?, TypeSyntax)] {
+        self.elements.first?.parameterClause?.parameters.map {
+            ($0.firstName, $0.type)
+        } ?? []
     }
 }
 
