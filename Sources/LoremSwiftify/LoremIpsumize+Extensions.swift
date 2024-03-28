@@ -55,6 +55,23 @@ extension UUID: LoremIpsumize {
 }
 
 extension String: LoremIpsumize {
+    public static func lorem(_ kind: LoremKind?) -> String {
+        switch kind {
+        case .string(.name):
+            return faker.name.name()
+        case .string(.email):
+            return faker.internet.email()
+        case .string(.phoneNumber):
+            return faker.phoneNumber.phoneNumber()
+        case .string(.creditCard):
+            return faker.business.creditCardNumber()
+        case .string(.hexColor):
+            return Color.randomHexColor()
+        default:
+            return lorem()
+        }
+    }
+
     public static func lorem() -> String {
         faker.lorem.word()
     }
@@ -170,5 +187,18 @@ extension Color: LoremIpsumize {
             blue: .random(in: 0...1),
             opacity: 1
         )
+    }
+
+    static func randomHexColor() -> String {
+        let letters = "0123456789ABCDEF"
+        var colorString = "#"
+
+        for _ in 0..<6 {
+            let randomIndex = Int(arc4random_uniform(UInt32(letters.count)))
+            let randomCharacter = letters[letters.index(letters.startIndex, offsetBy: randomIndex)]
+            colorString.append(randomCharacter)
+        }
+
+        return colorString
     }
 }
