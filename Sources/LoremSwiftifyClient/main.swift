@@ -2,28 +2,25 @@ import Foundation
 import LoremSwiftify
 
 @LoremSwiftify
-struct Person {
-    let name: String
-    let surname: String
-    var title: String = "DefaultTitle"
-    let age: Int
-    var isAdult = true
-}
-
-@LoremSwiftify
-struct Book {
+class Book {
     let name: String
     let published: Date
     let author: Author
 
+    init(name: String, published: Date, author: Author) {
+        self.name = name
+        self.published = published
+        self.author = author
+    }
+
     @LoremSwiftify
-    struct Author {
+    class Author {
         let name: String
         let surname: String
         var nickName: String?
         let age: Int
 
-        init(name: String, surname: String, nickName: String? = nil, age: Int) {
+        init(_ name: String, surname: String, nickName: String? = nil, age: Int) {
             self.name = name
             self.surname = surname
             self.nickName = nickName
@@ -31,6 +28,8 @@ struct Book {
         }
     }
 }
+
+print(Book.lorem())
 
 @LoremSwiftify
 struct Hotel {
@@ -40,12 +39,16 @@ struct Hotel {
     @LoremSwiftify
     struct Room {
         let id: UUID
-        let capacity: Int
+        let capacity: Capacity
+
+        @LoremSwiftify
+        enum Capacity: Int {
+            case one = 1
+            case two = 2
+            case three = 3
+            case four = 4
+        }
     }
 }
 
-print(Person.lorem())
-print(Author.lorem())
-print(Book.lorem())
-print(User.lorem())
 print(Hotel.lorem())

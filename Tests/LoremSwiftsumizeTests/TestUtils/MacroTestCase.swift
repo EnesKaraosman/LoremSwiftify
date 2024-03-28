@@ -2,8 +2,6 @@
 //  MockableMacroTestCase.swift
 //
 //
-//  Created by Kolos Foltanyi on 2023. 11. 21..
-//
 
 import Foundation
 import SwiftSyntaxMacros
