@@ -22,7 +22,7 @@ let package = Package(
         // Depend on the Swift 5.9 release of SwiftSyntax
         .package(url: "https://github.com/apple/swift-syntax.git", from: "509.1.1"),
         .package(url: "https://github.com/pointfreeco/swift-macro-testing", from: "0.3.0"),
-        .package(url: "https://github.com/vadymmarkov/Fakery", from: "5.0.0")
+        .package(url: "https://github.com/vadymmarkov/Fakery", from: "5.1.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
