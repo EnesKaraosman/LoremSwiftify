@@ -33,7 +33,12 @@ print(Book.lorem())
 
 @LoremSwiftify
 struct Hotel {
+    @Lorem(.string(.name))
     let name: String
+
+    @Lorem(.string(.phoneNumber))
+    let phoneNumber: String
+
     let rooms: [Room]
 
     @LoremSwiftify

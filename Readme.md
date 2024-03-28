@@ -21,6 +21,8 @@
 - [X] Custom types supported if it's annotated with macro or confirms `LoremIpsumize` protocol
 - [ ] Create Example SwiftUI project to demonstrate package usage for previews
 - [ ] Provide a way to customize lorem in different categories (like creditCard, phoneNumber, name, price etc..)
+    - [X] Handle for auto generated init
+    - [ ] Handle for existing init
 - [ ] Provide a way to customize loreming for the supported built-in types (to completely determine what to receive for the lorem data)
 - [ ] Improve diagnostic
 - [ ] Implement unit test
@@ -89,7 +91,12 @@ print(Book.lorem())
 
 @LoremSwiftify
 struct Hotel {
+    @Lorem(.string(.name))
     let name: String
+
+    @Lorem(.string(.phoneNumber))
+    let phoneNumber: String
+    
     let rooms: [Room]
 
     @LoremSwiftify
@@ -125,7 +132,8 @@ struct Hotel {
 extension Hotel: LoremIpsumize {
     public static func lorem() -> Self {
         Hotel(
-            name: .lorem(),
+            name: .lorem(.string(.name)),
+            phoneNumber: .lorem(.string(.phoneNumber)),
             rooms: .lorem()
         )
     }

@@ -86,9 +86,14 @@ enum LoremSwiftifyMacroParsingShared {
         for variable in variableDecls where !variable.isInitialized {
             guard let pattern = variable.bindings.first?.pattern else { continue }
             
+            var lorem = ".lorem()"
+
+            if let loremAttributeKindString = variable.loremAttributeKindString {
+                lorem = ".lorem(\(loremAttributeKindString))"
+            }
+
             let name = "\(pattern.trimmed)"
 
-            let lorem = ".lorem()"
             initialCode.append("\n\(name): \(lorem), ")
         }
 

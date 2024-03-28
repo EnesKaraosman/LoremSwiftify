@@ -98,6 +98,35 @@ extension VariableDeclSyntax {
     var typeName: String {
         bindings.first?.typeAnnotation?.type.as(IdentifierTypeSyntax.self)?.name.text ?? ""
     }
+
+    private var loremAttribute: AttributeSyntax? {
+        attributes
+            .first(
+                where: { 
+                    $0.as(AttributeSyntax.self)?
+                        .attributeName.as(IdentifierTypeSyntax.self)?
+                        .name.text == "Lorem"
+                }
+            )?
+            .as(AttributeSyntax.self)
+    }
+
+    /// Returns a value to be used  to initiate `LoremKind` like .string(.init("creditCard"))
+    var loremAttributeKindString: String? {
+        guard
+            let loremAttribute,
+            let expression = loremAttribute
+                .arguments?.as(LabeledExprListSyntax.self)?
+                .first?.expression.as(FunctionCallExprSyntax.self),
+            let outerEnumRawValue = expression.calledExpression.as(MemberAccessExprSyntax.self)?
+                .declName.baseName.text,
+            let innerEnumRawValue = expression.arguments
+                .first?.expression.as(MemberAccessExprSyntax.self)?
+                .declName.baseName.text
+        else { return nil }
+
+        return ".\(outerEnumRawValue)(.init(\"\(innerEnumRawValue)\"))"
+    }
 }
 
 extension TypeSyntax {
