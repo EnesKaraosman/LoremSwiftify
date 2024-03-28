@@ -31,6 +31,13 @@ enum LoremSwiftifyMacroDiagnostic: DiagnosticMessage, Error {
     var severity: SwiftDiagnostics.DiagnosticSeverity { .error }
 }
 
+public enum LoremMacro: PeerMacro {
+    public static func expansion(of node: SwiftSyntax.AttributeSyntax, providingPeersOf declaration: some SwiftSyntax.DeclSyntaxProtocol, in context: some SwiftSyntaxMacros.MacroExpansionContext) throws -> [SwiftSyntax.DeclSyntax] {
+        // LoremMacro does not generate something, this will be controlled in LoremSwiftify macro
+        []
+    }
+}
+
 public enum LoremSwiftifyMacro: MemberMacro {
     public static func expansion(
         of node: AttributeSyntax,
@@ -51,7 +58,13 @@ public enum LoremSwiftifyMacro: MemberMacro {
 }
 
 extension LoremSwiftifyMacro: ExtensionMacro {
-    public static func expansion(of node: SwiftSyntax.AttributeSyntax, attachedTo declaration: some SwiftSyntax.DeclGroupSyntax, providingExtensionsOf type: some SwiftSyntax.TypeSyntaxProtocol, conformingTo protocols: [SwiftSyntax.TypeSyntax], in context: some SwiftSyntaxMacros.MacroExpansionContext) throws -> [SwiftSyntax.ExtensionDeclSyntax] {
+    public static func expansion(
+        of node: SwiftSyntax.AttributeSyntax,
+        attachedTo declaration: some SwiftSyntax.DeclGroupSyntax,
+        providingExtensionsOf type: some SwiftSyntax.TypeSyntaxProtocol,
+        conformingTo protocols: [SwiftSyntax.TypeSyntax],
+        in context: some SwiftSyntaxMacros.MacroExpansionContext
+    ) throws -> [SwiftSyntax.ExtensionDeclSyntax] {
 
         let extensionDecl = try ExtensionDeclSyntax(
             extendedType: type,
@@ -97,5 +110,6 @@ extension LoremSwiftifyMacro: ExtensionMacro {
 struct LoremSwiftifyPlugin: CompilerPlugin {
     let providingMacros: [Macro.Type] = [
         LoremSwiftifyMacro.self,
+        LoremMacro.self,
     ]
 }
