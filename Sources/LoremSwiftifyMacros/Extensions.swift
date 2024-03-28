@@ -111,7 +111,7 @@ extension VariableDeclSyntax {
             .as(AttributeSyntax.self)
     }
 
-    /// Returns a value to be used  to initiate `LoremKind` like .string(.init("creditCard"))
+    /// Returns a value to be used  to initiate `LoremKind` like .string(.creditCard)
     var loremAttributeKindString: String? {
         guard
             let loremAttribute,
@@ -125,7 +125,7 @@ extension VariableDeclSyntax {
                 .declName.baseName.text
         else { return nil }
 
-        return ".\(outerEnumRawValue)(.init(\"\(innerEnumRawValue)\"))"
+        return ".\(outerEnumRawValue)(.\(innerEnumRawValue))"
     }
 }
 

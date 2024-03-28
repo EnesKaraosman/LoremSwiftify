@@ -9,19 +9,6 @@ import Foundation
 
 public enum LoremKind {
     case string(StringLorem)
-
-    public init?(_ kind: String) {
-        let array = kind.components(separatedBy: ".")
-        let parentKind = array.first ?? ""
-        let childKind = array.last ?? ""
-        
-        switch parentKind {
-        case "string":
-            self = .string(.init(childKind))
-        default:
-            return nil
-        }
-    }
 }
 
 public extension LoremKind {
@@ -32,9 +19,5 @@ public extension LoremKind {
         case creditCard
         case hexColor
         case `default`
-
-        public init(_ kind: String) {
-            self = StringLorem(rawValue: kind) ?? .default
-        }
     }
 }
