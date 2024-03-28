@@ -12,7 +12,16 @@ private let faker = Faker()
 
 public protocol LoremIpsumize {
     static func lorem() -> Self
+
+    static func lorem(_ kind: LoremKind?) -> Self
 }
+
+extension LoremIpsumize {
+    public static func lorem(_ kind: LoremKind? = nil) -> Self {
+        lorem(kind)
+    }
+}
+
 extension Optional: LoremIpsumize {
     public static func lorem() -> Optional<Wrapped> {
         .none
@@ -32,7 +41,7 @@ extension Dictionary: LoremIpsumize where Key: LoremIpsumize, Value: LoremIpsumi
 extension Array: LoremIpsumize where Element: LoremIpsumize {
     public static func lorem() -> Array<Element> {
         let count = Int.random(in: 2...10)
-        
+
         return (1...count).indices.map { _ in
             Element.lorem()
         }
