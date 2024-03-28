@@ -30,7 +30,8 @@ class LoremSwiftifyEnum {
 
         let funcDecl = try FunctionDeclSyntax(
             modifiers: [
-                .init(name: .identifier("static"))
+                .init(name: .keyword(.public)), // TODO: Add if type is public
+                .init(name: .keyword(.static))
             ],
             name: "lorem",
             signature: FunctionSignatureSyntax(
