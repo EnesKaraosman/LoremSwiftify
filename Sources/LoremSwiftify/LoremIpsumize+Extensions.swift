@@ -10,6 +10,9 @@ import SwiftUI
 
 private let faker = Faker()
 
+public protocol LoremIpsumize {
+    static func lorem() -> Self
+}
 extension Optional: LoremIpsumize {
     public static func lorem() -> Optional<Wrapped> {
         .none
