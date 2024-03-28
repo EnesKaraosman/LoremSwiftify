@@ -18,113 +18,117 @@
     - [X] URL
     - [X] Color
 - [X] Custom types supported if it's annotated with macro or confirms `LoremIpsumize` protocol
+- [ ] Create Example SwiftUI project to demonstrate package usage for previews
+- [ ] Provide a way to customize lorem in different categories (like creditCard, phoneNumber, name, price etc..)
+- [ ] Provide a way to customize loreming for the supported built-in types (to completely determine what to receive for the lorem data)
 - [ ] Improve diagnostic
 - [ ] Implement unit test
 
 ---
 
-- Annotate struct with `@LoremSwiftify`
+- Annotate any struct, class or enum with `@LoremSwiftify`
 
-If there's no defined init, macro uses default init. Also macro does not override the fields that has default value
+Then use `StructName.lorem()` or `ClassName.lorem()` or `EnumName.lorem()`. Basically `.lorem()` everywhere :)
+
 
 ```swift
+import Foundation
 import LoremSwiftify
 
 @LoremSwiftify
-struct Person {
-    let name: String
-    let surname: String
-    var title: String = "DefaultTitle"
-    let age: Int
-    var isAdult = true
-
-    // Expands;
-    // Generated lorem
-    static func lorem() -> Self {
-        return Person(
-            name: "Jamie",
-            surname: "Grady",
-            title: "DefaultTitle",
-            age: 56,
-            isAdult: true
-        )
-    }
-}
-```
-
-- Custom struct
-
-```swift
-@LoremSwiftify
-struct Book {
+class Book {
     let name: String
     let published: Date
     let author: Author
 
+    init(name: String, published: Date, author: Author) {
+        self.name = name
+        self.published = published
+        self.author = author
+    }
+
     @LoremSwiftify
-    struct Author {
+    class Author {
         let name: String
         let surname: String
         var nickName: String?
         let age: Int
 
-        init(name: String, surname: String, nickName: String? = nil, age: Int) {
+        init(_ name: String, surname: String, nickName: String? = nil, age: Int) {
             self.name = name
             self.surname = surname
             self.nickName = nickName
             self.age = age
         }
-        
-        // Expands;
-        // Generated lorem
-        static func lorem() -> Self {
-            return Author(
-                name: String.lorem(),
-                surname: String.lorem(),
+    }
+    // Expands
+    extension Book.Author: LoremIpsumize {
+        public static func lorem() -> Self {
+            Book.Author(
+                _: .lorem(),
+                surname: .lorem(),
                 nickName: nil,
-                age: Int.lorem()
+                age: .lorem()
+            ) as! Self
+        }
+    }
+}
+// Expands
+extension Book: LoremIpsumize {
+    public static func lorem() -> Self {
+        Book(
+            name: .lorem(),
+            published: .lorem(),
+            author: .lorem()
+        ) as! Self
+    }
+}
+
+print(Book.lorem())
+
+@LoremSwiftify
+struct Hotel {
+    let name: String
+    let rooms: [Room]
+
+    @LoremSwiftify
+    struct Room {
+        let id: UUID
+        let capacity: Capacity
+
+        @LoremSwiftify
+        enum Capacity: Int {
+            case one = 1
+            case two = 2
+            case three = 3
+            case four = 4
+        }
+        // Expands
+        extension Hotel.Room.Capacity: LoremIpsumize {
+            public static func lorem() -> Self {
+                Hotel.Room.Capacity.one
+            }
+        }
+    }
+    // Expands
+    extension Hotel.Room: LoremIpsumize {
+        public static func lorem() -> Self {
+            Hotel.Room(
+                id: .lorem(),
+                capacity: .lorem()
             )
         }
     }
-    
-    // Expands;
-    // Generated lorem
-    static func lorem() -> Self {
-        return Book(
-            name: String.lorem(),
-            published: Date.lorem(),
-            author: Author.lorem()
+}
+// Expands
+extension Hotel: LoremIpsumize {
+    public static func lorem() -> Self {
+        Hotel(
+            name: .lorem(),
+            rooms: .lorem()
         )
     }
 }
-```
 
-- inits used if exist
-
-```swift
-@LoremSwiftify
-struct User {
-    let name: String
-    let surname: String
-    let age: Int
-    let isAdult: Bool
-
-    init(name: String, surname: String, age: Int, isAdult: Bool) {
-        self.name = name
-        self.surname = surname
-        self.age = age
-        self.isAdult = isAdult
-    }
-
-    // Expands;
-    // Generated lorem
-    static func lorem() -> Self {
-        return User(
-            name: "Lorie",
-            surname: "Agnes",
-            age: 9,
-            isAdult: true
-        )
-    }
-}
+print(Hotel.lorem())
 ```
