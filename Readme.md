@@ -14,6 +14,7 @@
     - [X] Bool
     - [X] Array
     - [X] Dictionary
+    - [X] Optional
     - [X] Date
     - [X] URL
     - [X] Color

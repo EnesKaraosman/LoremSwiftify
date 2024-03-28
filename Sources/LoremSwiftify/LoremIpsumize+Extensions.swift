@@ -10,6 +10,12 @@ import SwiftUI
 
 private let faker = Faker()
 
+extension Optional: LoremIpsumize {
+    public static func lorem() -> Optional<Wrapped> {
+        .none
+    }
+}
+
 extension Dictionary: LoremIpsumize where Key: LoremIpsumize, Value: LoremIpsumize {
     public static func lorem() -> Dictionary<Key, Value> {
         let count = Int.random(in: 2...10)
