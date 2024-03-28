@@ -15,7 +15,7 @@ jobs:
     runs-on: macos-14
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: List Xcode installations
       run: sudo ls -1 /Applications | grep "Xcode"
