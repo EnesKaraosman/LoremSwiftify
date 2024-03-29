@@ -58,17 +58,17 @@ extension String: LoremIpsumize {
     public static func lorem(_ kind: LoremKind?) -> String {
         switch kind {
         case .string(.name):
-            return faker.name.name()
+            faker.name.name()
         case .string(.email):
-            return faker.internet.email()
+            faker.internet.email()
         case .string(.phoneNumber):
-            return faker.phoneNumber.phoneNumber()
+            faker.phoneNumber.phoneNumber()
         case .string(.creditCard):
-            return faker.business.creditCardNumber()
+            faker.business.creditCardNumber()
         case .string(.hexColor):
-            return Color.randomHexColor()
+            Color.randomHexColor()
         default:
-            return lorem()
+            lorem()
         }
     }
 
@@ -176,6 +176,17 @@ extension Date: LoremIpsumize {
 extension URL: LoremIpsumize {
     public static func lorem() -> URL {
         URL(string: "https://picsum.photos/300") ?? URL(string: faker.internet.url())!
+    }
+
+    public static func lorem(_ kind: LoremKind?) -> URL {
+        switch kind {
+        case .url(.website): 
+            URL(string: faker.internet.url()) ?? lorem()
+        case .url(.image): 
+            URL(string: "https://picsum.photos/400") ?? lorem()
+        default: 
+            lorem()
+        }
     }
 }
 

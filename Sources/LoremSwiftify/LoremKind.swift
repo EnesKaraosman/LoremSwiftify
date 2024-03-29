@@ -9,15 +9,23 @@ import Foundation
 
 public enum LoremKind {
     case string(StringLorem)
+    case url(URLLorem)
 }
 
 public extension LoremKind {
-    enum StringLorem: String, RawRepresentable {
+    enum StringLorem: String {
         case name
         case email
         case phoneNumber
         case creditCard
         case hexColor
         case `default`
+    }
+}
+
+public extension LoremKind {
+    enum URLLorem: String {
+        case image
+        case website
     }
 }

@@ -96,13 +96,19 @@ struct Hotel {
 
     @Lorem(.string(.phoneNumber))
     let phoneNumber: String
-    
+
+    @Lorem(.url(.website))
+    let website: URL
+
     let rooms: [Room]
 
     @LoremSwiftify
     struct Room {
         let id: UUID
         let capacity: Capacity
+
+        @Lorem(.url(.image))
+        let image: URL
 
         @LoremSwiftify
         enum Capacity: Int {
@@ -123,7 +129,8 @@ struct Hotel {
         public static func lorem() -> Self {
             Hotel.Room(
                 id: .lorem(),
-                capacity: .lorem()
+                capacity: .lorem(),
+                image: .lorem(.url(.image))
             )
         }
     }
@@ -134,6 +141,7 @@ extension Hotel: LoremIpsumize {
         Hotel(
             name: .lorem(.string(.name)),
             phoneNumber: .lorem(.string(.phoneNumber)),
+            website: .lorem(.url(.website)),
             rooms: .lorem()
         )
     }
