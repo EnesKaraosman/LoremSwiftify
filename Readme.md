@@ -1,8 +1,6 @@
 # LoremSwiftify
 
-> This package is created to challange Swift Macros and it's under development. So currently support types are limited
-
-### Todos
+### Features
 - [X] Support class (nesting is supported as well)
 - [X] Support struct (nesting is supported as well)
 - [X] Support enum (nesting is supported as well)
@@ -35,7 +33,6 @@ Then use `StructName.lorem()` or `ClassName.lorem()` or `EnumName.lorem()`. Basi
 
 
 ```swift
-import Foundation
 import LoremSwiftify
 
 @LoremSwiftify
