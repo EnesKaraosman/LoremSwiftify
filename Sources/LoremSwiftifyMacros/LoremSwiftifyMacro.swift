@@ -38,12 +38,14 @@ public enum LoremMacro: PeerMacro {
     }
 }
 
-public enum LoremSwiftifyMacro: MemberMacro {
+public enum LoremSwiftifyMacro: ExtensionMacro {
     public static func expansion(
-        of node: AttributeSyntax,
-        providingMembersOf declaration: some DeclGroupSyntax,
-        in context: some MacroExpansionContext
-    ) throws -> [DeclSyntax] {
+        of node: SwiftSyntax.AttributeSyntax,
+        attachedTo declaration: some SwiftSyntax.DeclGroupSyntax,
+        providingExtensionsOf type: some SwiftSyntax.TypeSyntaxProtocol,
+        conformingTo protocols: [SwiftSyntax.TypeSyntax],
+        in context: some SwiftSyntaxMacros.MacroExpansionContext
+    ) throws -> [SwiftSyntax.ExtensionDeclSyntax] {
         if !declaration.is(StructDeclSyntax.self)
             && !declaration.is(ClassDeclSyntax.self)
             && !declaration.is(EnumDeclSyntax.self) {
@@ -53,54 +55,42 @@ public enum LoremSwiftifyMacro: MemberMacro {
             throw LoremSwiftifyMacroDiagnostic.unsupportedType
         }
 
-        return []
-    }
-}
-
-extension LoremSwiftifyMacro: ExtensionMacro {
-    public static func expansion(
-        of node: SwiftSyntax.AttributeSyntax,
-        attachedTo declaration: some SwiftSyntax.DeclGroupSyntax,
-        providingExtensionsOf type: some SwiftSyntax.TypeSyntaxProtocol,
-        conformingTo protocols: [SwiftSyntax.TypeSyntax],
-        in context: some SwiftSyntaxMacros.MacroExpansionContext
-    ) throws -> [SwiftSyntax.ExtensionDeclSyntax] {
-
         let extensionDecl = try ExtensionDeclSyntax(
             extendedType: type,
             inheritanceClause: InheritanceClauseSyntax(
                 inheritedTypes: .init(
                     itemsBuilder: { .init(type: protocols.first!) }
                 )
-            )
-        ) {
-            if let classDecl = declaration.as(ClassDeclSyntax.self) {
-                try LoremSwiftifyClass.expansion(
-                    of: node,
-                    providingMembersOf: classDecl,
-                    in: context,
-                    type: type
-                )
+            ),
+            memberBlockBuilder:  {
+                if let classDecl = declaration.as(ClassDeclSyntax.self) {
+                    try LoremSwiftifyClass.expansion(
+                        of: node,
+                        providingMembersOf: classDecl,
+                        in: context,
+                        type: type
+                    )
+                }
+                
+                if let structDecl = declaration.as(StructDeclSyntax.self) {
+                    try LoremSwiftifyStruct.expansion(
+                        of: node,
+                        providingMembersOf: structDecl,
+                        in: context,
+                        type: type
+                    )
+                }
+                
+                if let enumDecl = declaration.as(EnumDeclSyntax.self) {
+                    try LoremSwiftifyEnum.expansion(
+                        of: node,
+                        providingMembersOf: enumDecl,
+                        in: context,
+                        type: type
+                    )
+                }
             }
-
-            if let structDecl = declaration.as(StructDeclSyntax.self) {
-                try LoremSwiftifyStruct.expansion(
-                    of: node,
-                    providingMembersOf: structDecl,
-                    in: context,
-                    type: type
-                )
-            }
-
-            if let enumDecl = declaration.as(EnumDeclSyntax.self) {
-                try LoremSwiftifyEnum.expansion(
-                    of: node,
-                    providingMembersOf: enumDecl,
-                    in: context,
-                    type: type
-                )
-            }
-        }
+        )
 
         return [extensionDecl]
     }

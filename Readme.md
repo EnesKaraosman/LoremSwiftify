@@ -17,6 +17,7 @@
     - [X] URL
     - [X] Color
 - [X] Custom types supported if it's annotated with macro or confirms `LoremIpsumize` protocol
+- [ ] Add #if DEBUG
 - [ ] Create Example SwiftUI project to demonstrate package usage for previews
 - [ ] Provide a way to customize lorem in different categories (like creditCard, phoneNumber, name, price etc..)
     - [X] Handle for auto generated init

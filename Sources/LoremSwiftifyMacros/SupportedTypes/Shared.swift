@@ -64,10 +64,15 @@ enum LoremSwiftifyMacroParsingShared {
         for parameter in parameters {
             let name = parameter.firstName.text
 
-            let lorem = ".lorem()"
+            if let defaultValue = parameter.defaultValue?.value {
+                initialCode.append("\n\(name): \(defaultValue), ")
+            } else {
+                
+                let lorem = ".lorem()"
+//                let value = "\(raw: lorem)"
+                initialCode.append("\n\(name): \(lorem), ")
+            }
 
-            let value = parameter.defaultValue?.value ?? "\(raw: lorem)"
-            initialCode.append("\n\(name): \(value), ")
         }
 
         initialCode = String(initialCode.dropLast(2))
