@@ -26,6 +26,12 @@
 
 ---
 
+See example project
+
+[Example](Example/Example)
+
+---
+
 - Annotate any struct, class or enum with `@LoremSwiftify`
 
 Then use `StructName.lorem()` or `ClassName.lorem()` or `EnumName.lorem()`. Basically `.lorem()` everywhere :)
