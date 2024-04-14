@@ -18,10 +18,8 @@
     - [X] Color
 - [X] Custom types supported if it's annotated with macro or confirms `LoremIpsumize` protocol
 - [ ] Add #if DEBUG
-- [ ] Create Example SwiftUI project to demonstrate package usage for previews
-- [ ] Provide a way to customize lorem in different categories (like creditCard, phoneNumber, name, price etc..)
-    - [X] Handle for auto generated init
-    - [ ] Handle for existing init
+- [X] Create Example SwiftUI project to demonstrate package usage for previews
+- [X] Provide a way to customize lorem in different categories (like creditCard, phoneNumber, name, price etc..) (works for auto generated init)
 - [ ] Provide a way to customize loreming for the supported built-in types (to completely determine what to receive for the lorem data)
 - [ ] Improve diagnostic
 - [ ] Implement unit test
