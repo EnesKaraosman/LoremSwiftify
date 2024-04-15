@@ -45,6 +45,9 @@ struct ContentView: View {
 
             VStack(alignment: .leading) {
                 Text(developer.name)
+                Text(developer.phoneNumber)
+                    .font(.footnote)
+                    .foregroundStyle(.brown)
                 Text(developer.email)
                     .font(.footnote)
                     .foregroundStyle(.gray)
@@ -80,6 +83,9 @@ extension ContentView {
 
             @Lorem(.string(.email))
             let email: String
+
+            @Lorem(.string(.phoneNumber))
+            let phoneNumber: String
 
             @Lorem(.url(.image))
             let imageURL: URL
