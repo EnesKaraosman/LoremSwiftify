@@ -8,8 +8,44 @@
 import LoremSwiftify
 import SwiftUI
 
+extension UIColor {
+    static func fromIntToHex(_ rawColor: String) -> UIColor? {
+        var hex = String(String(format: "%02X", Int(rawColor)!).reversed())
+            .padding(toLength: 6, withPad: "0", startingAt: 0)
+        hex = String(hex.reversed())
+        return .from(hex: "#\(hex)")
+    }
+    
+    static func from(hex: String) -> UIColor? {
+        var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+
+        if (cString.hasPrefix("#")) {
+            cString.remove(at: cString.startIndex)
+        }
+
+        if ((cString.count) != 6) {
+            return nil
+        }
+
+        var rgbValue:UInt64 = 0
+        Scanner(string: cString).scanHexInt64(&rgbValue)
+
+        return UIColor(
+            red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
+            green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
+            blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
+            alpha: CGFloat(1.0)
+        )
+    }
+}
+
 struct ContentView: View {
     let display: ContentView.Display
+    
+    init(display: ContentView.Display) {
+        self.display = display
+        debugPrint(UIColor.fromIntToHex(display.developers.first!.color2))
+    }
 
     var body: some View {
         ScrollView {
@@ -45,9 +81,12 @@ struct ContentView: View {
 
             VStack(alignment: .leading) {
                 Text(developer.name)
+                    .foregroundStyle(Color(uiColor: UIColor.from(hex: developer.color)!))
+                Text(developer.imageURLString)
+                    .foregroundStyle(Color(uiColor: UIColor.fromIntToHex(developer.color2)!))
+                Text(developer.date)
                 Text(developer.phoneNumber)
                     .font(.footnote)
-                    .foregroundStyle(.brown)
                 Text(developer.email)
                     .font(.footnote)
                     .foregroundStyle(.gray)
@@ -89,6 +128,18 @@ extension ContentView {
 
             @Lorem(.url(.image))
             let imageURL: URL
+            
+            @Lorem(.url(.image))
+            let imageURLString: String
+            
+            @Lorem(.string(.hexColor))
+            let color: String
+            
+            @Lorem(.string(.rgbColor))
+            let color2: String
+            
+            @Lorem(.string(.date))
+            let date: String
 
             @Lorem(.url(.website))
             let profileURL: URL

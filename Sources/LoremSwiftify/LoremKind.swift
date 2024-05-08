@@ -19,6 +19,8 @@ public extension LoremKind {
         case phoneNumber
         case creditCard
         case hexColor
+        case rgbColor
+        case date
         case `default`
     }
 }

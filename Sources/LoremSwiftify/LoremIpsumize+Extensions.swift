@@ -6,6 +6,7 @@
 //
 
 import Fakery
+import Foundation
 import SwiftUI
 
 private let faker = Faker()
@@ -25,6 +26,77 @@ extension LoremIpsumize {
 extension Optional: LoremIpsumize {
     public static func lorem() -> Optional<Wrapped> {
         .none
+    }
+    
+    public static func lorem(_ kind: LoremKind?) -> Optional<Wrapped> {
+        if Wrapped.self == String.self {
+            return String.lorem(kind) as! Wrapped
+        }
+        if Wrapped.self == Int.self {
+            return Int.lorem() as! Wrapped
+        }
+        
+        if Wrapped.self == Int8.self {
+            return Int8.lorem() as! Wrapped
+        }
+        
+        if Wrapped.self == Int16.self {
+            return Int16.lorem() as! Wrapped
+        }
+        
+        if Wrapped.self == Int32.self {
+            return Int32.lorem() as! Wrapped
+        }
+        
+        if Wrapped.self == Int64.self {
+            return Int64.lorem() as! Wrapped
+        }
+        
+        if Wrapped.self == UInt.self {
+            return UInt.lorem() as! Wrapped
+        }
+        
+        if Wrapped.self == UInt8.self {
+            return UInt8.lorem() as! Wrapped
+        }
+        
+        if Wrapped.self == UInt16.self {
+            return UInt16.lorem() as! Wrapped
+        }
+        
+        if Wrapped.self == UInt32.self {
+            return UInt32.lorem() as! Wrapped
+        }
+        
+        if Wrapped.self == UInt64.self {
+            return UInt64.lorem() as! Wrapped
+        }
+        
+        if Wrapped.self == Double.self {
+            return Double.lorem() as! Wrapped
+        }
+        
+        if Wrapped.self == Float.self {
+            return Float.lorem() as! Wrapped
+        }
+        
+        if Wrapped.self == Bool.self {
+            return Bool.lorem() as! Wrapped
+        }
+        
+        if Wrapped.self == Date.self {
+            return Date.lorem() as! Wrapped
+        }
+        
+        if Wrapped.self == URL.self {
+            return URL.lorem() as! Wrapped
+        }
+        
+        if Wrapped.self == Color.self {
+            return Color.lorem() as! Wrapped
+        }
+
+        return .none
     }
 }
 
@@ -58,17 +130,28 @@ extension String: LoremIpsumize {
     public static func lorem(_ kind: LoremKind?) -> String {
         switch kind {
         case .string(.name):
-            faker.name.name()
+            return faker.name.name()
         case .string(.email):
-            faker.internet.email()
+            return faker.internet.email()
         case .string(.phoneNumber):
-            faker.phoneNumber.phoneNumber()
+            return faker.phoneNumber.phoneNumber()
         case .string(.creditCard):
-            faker.business.creditCardNumber()
+            return faker.business.creditCardNumber()
         case .string(.hexColor):
-            Color.randomHexColor()
+            return Color.randomHexColor()
+        case .string(.date):
+            return ISO8601DateFormatter().string(from: Date.lorem())
+        case .url(.website):
+            return faker.internet.url()
+        case .url(.image):
+            return "https://picsum.photos/400"
+        case .string(.rgbColor):
+            let hexStr = String(Color.randomHexColor().dropFirst())
+            var hex: UInt32 = 0
+            Scanner(string: hexStr).scanHexInt32(&hex)
+            return "\(Int(hex))"
         default:
-            lorem()
+            return lorem()
         }
     }
 
@@ -180,11 +263,11 @@ extension URL: LoremIpsumize {
 
     public static func lorem(_ kind: LoremKind?) -> URL {
         switch kind {
-        case .url(.website): 
+        case .url(.website):
             URL(string: faker.internet.url()) ?? lorem()
-        case .url(.image): 
+        case .url(.image):
             URL(string: "https://picsum.photos/400") ?? lorem()
-        default: 
+        default:
             lorem()
         }
     }
