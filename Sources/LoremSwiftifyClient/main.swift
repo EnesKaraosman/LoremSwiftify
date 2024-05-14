@@ -50,7 +50,7 @@ struct Hotel {
         let capacity: Capacity
 
         @Lorem(.url(.image))
-        let image: URL
+        let image: URL?
 
         @LoremSwiftify
         enum Capacity: Int {

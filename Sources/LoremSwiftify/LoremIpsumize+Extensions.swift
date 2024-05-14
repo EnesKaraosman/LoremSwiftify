@@ -18,7 +18,7 @@ public protocol LoremIpsumize {
 
 extension LoremIpsumize {
     public static func lorem(_ kind: LoremKind? = nil) -> Self {
-        lorem(kind)
+        lorem()
     }
 }
 
