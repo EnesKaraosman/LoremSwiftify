@@ -21,7 +21,7 @@ let package = Package(
     dependencies: [
         // Depend on the Swift 5.9 release of SwiftSyntax
         .package(url: "https://github.com/apple/swift-syntax.git", from: "510.0.2"),
-        .package(url: "https://github.com/pointfreeco/swift-macro-testing", from: "0.4.1"),
+        .package(url: "https://github.com/pointfreeco/swift-macro-testing", from: "0.4.2"),
         .package(url: "https://github.com/vadymmarkov/Fakery", from: "5.1.0")
     ],
     targets: [
