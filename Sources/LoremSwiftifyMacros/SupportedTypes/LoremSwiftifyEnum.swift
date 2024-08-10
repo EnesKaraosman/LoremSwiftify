@@ -24,6 +24,8 @@ class LoremSwiftifyEnum {
 
         if cases.isEmpty {
             context.diagnose(.init(node: declaration, message: LoremSwiftifyMacroDiagnostic.noEnumCase))
+            
+            return ""
         }
 
         let caseExpr = generateEnumCreationFunctionBody(for: cases)

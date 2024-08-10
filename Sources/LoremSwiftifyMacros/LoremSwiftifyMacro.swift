@@ -6,31 +6,6 @@ import SwiftSyntaxMacros
 
 let protocolName = "LoremIpsumize"
 
-// TODO: Use better diagnostics
-// https://github.com/apple/swift-syntax/blob/main/Examples/Sources/MacroExamples/Implementation/Diagnostics.swift
-enum LoremSwiftifyMacroDiagnostic: DiagnosticMessage, Error {
-    case unsupportedType
-    case noMemberToMock
-    case noEnumCase
-
-    var message: String {
-        switch self {
-        case .unsupportedType:
-            return "You can only lorem struct, class and enum"
-        case .noMemberToMock:
-            return "There is no member to lorem"
-        case .noEnumCase:
-            return "There is no enum case to lorem"
-        }
-    }
-
-    var diagnosticID: SwiftDiagnostics.MessageID {
-        MessageID(domain: "Swift", id: "LoremSwiftifyMacroDiagnostic.\(self)")
-    }
-
-    var severity: SwiftDiagnostics.DiagnosticSeverity { .error }
-}
-
 public enum LoremMacro: PeerMacro {
     public static func expansion(of node: SwiftSyntax.AttributeSyntax, providingPeersOf declaration: some SwiftSyntax.DeclSyntaxProtocol, in context: some SwiftSyntaxMacros.MacroExpansionContext) throws -> [SwiftSyntax.DeclSyntax] {
         // LoremMacro does not generate something, this will be controlled in LoremSwiftify macro
@@ -52,7 +27,7 @@ public enum LoremSwiftifyMacro: ExtensionMacro {
 
             context.diagnose(.init(node: declaration, message: LoremSwiftifyMacroDiagnostic.unsupportedType))
 
-            throw LoremSwiftifyMacroDiagnostic.unsupportedType
+            return []
         }
 
         let extensionDecl = try ExtensionDeclSyntax(
