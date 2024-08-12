@@ -16,7 +16,7 @@ import LoremSwiftifyMacros
 class MacroTestCase: XCTestCase {
     override func invokeTest() {
         #if canImport(LoremSwiftifyMacros)
-        withMacroTesting(isRecording: false, macros: ["LoremSwiftifyMacros": LoremSwiftifyMacro.self]) {
+        withMacroTesting(record: false, macros: ["LoremSwiftifyMacros": LoremSwiftifyMacro.self]) {
             super.invokeTest()
         }
         #else

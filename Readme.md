@@ -21,7 +21,6 @@
 - [X] Create Example SwiftUI project to demonstrate package usage for previews
 - [X] Provide a way to customize lorem in different categories (like creditCard, phoneNumber, name, price etc..) (works for auto generated init)
 - [ ] Provide a way to customize loreming for the supported built-in types (to completely determine what to receive for the lorem data)
-- [ ] Improve diagnostic
 - [ ] Implement unit test
 
 ---
@@ -38,116 +37,34 @@ Then use `StructName.lorem()` or `ClassName.lorem()` or `EnumName.lorem()`. Basi
 
 
 ```swift
-import LoremSwiftify
-
-@LoremSwiftify
-class Book {
-    let name: String
-    let published: Date
-    let author: Author
-
-    init(name: String, published: Date, author: Author) {
-        self.name = name
-        self.published = published
-        self.author = author
-    }
-
+extension ContentView {
     @LoremSwiftify
-    class Author {
-        let name: String
-        let surname: String
-        var nickName: String?
-        let age: Int
-
-        init(_ name: String, surname: String, nickName: String? = nil, age: Int) {
-            self.name = name
-            self.surname = surname
-            self.nickName = nickName
-            self.age = age
-        }
-    }
-    // Expands
-    extension Book.Author: LoremIpsumize {
-        public static func lorem() -> Self {
-            Book.Author(
-                _: .lorem(),
-                surname: .lorem(),
-                nickName: nil,
-                age: .lorem()
-            ) as! Self
-        }
-    }
-}
-// Expands
-extension Book: LoremIpsumize {
-    public static func lorem() -> Self {
-        Book(
-            name: .lorem(),
-            published: .lorem(),
-            author: .lorem()
-        ) as! Self
-    }
-}
-
-print(Book.lorem())
-
-@LoremSwiftify
-struct Hotel {
-    @Lorem(.string(.name))
-    let name: String
-
-    @Lorem(.string(.phoneNumber))
-    let phoneNumber: String
-
-    @Lorem(.url(.website))
-    let website: URL
-
-    let rooms: [Room]
-
-    @LoremSwiftify
-    struct Room {
-        let id: UUID
-        let capacity: Capacity
-
-        @Lorem(.url(.image))
-        let image: URL
+    struct Display {
+        let developers: [Developer]
 
         @LoremSwiftify
-        enum Capacity: Int {
-            case one = 1
-            case two = 2
-            case three = 3
-            case four = 4
+        struct Developer: Identifiable {
+            let id: String = UUID().uuidString
+
+            @Lorem(.string(.name))
+            let name: String
+
+            @Lorem(.string(.email))
+            let email: String
+
+            @Lorem(.string(.phoneNumber))
+            let phoneNumber: String
+
+            @Lorem(.url(.image))
+            let imageURL: URL
+
+            @Lorem(.url(.website))
+            let profileURL: URL
         }
-        // Expands
-        extension Hotel.Room.Capacity: LoremIpsumize {
-            public static func lorem() -> Self {
-                Hotel.Room.Capacity.one
-            }
-        }
-    }
-    // Expands
-    extension Hotel.Room: LoremIpsumize {
-        public static func lorem() -> Self {
-            Hotel.Room(
-                id: .lorem(),
-                capacity: .lorem(),
-                image: .lorem(.url(.image))
-            )
-        }
-    }
-}
-// Expands
-extension Hotel: LoremIpsumize {
-    public static func lorem() -> Self {
-        Hotel(
-            name: .lorem(.string(.name)),
-            phoneNumber: .lorem(.string(.phoneNumber)),
-            website: .lorem(.url(.website)),
-            rooms: .lorem()
-        )
     }
 }
 
-print(Hotel.lorem())
+#Preview {
+    ContentView(display: .lorem())
+}
 ```
