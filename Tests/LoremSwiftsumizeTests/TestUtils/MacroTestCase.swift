@@ -6,21 +6,31 @@
 import Foundation
 import SwiftSyntaxMacros
 import SwiftSyntaxMacrosTestSupport
-import MacroTesting
 import XCTest
 
 #if canImport(LoremSwiftifyMacros)
 import LoremSwiftifyMacros
+
+let testMacros: [String: Macro.Type] = [
+    "LoremSwiftifyMacros": LoremSwiftifyMacro.self
+]
 #endif
 
-class MacroTestCase: XCTestCase {
-    override func invokeTest() {
-        #if canImport(LoremSwiftifyMacros)
-        withMacroTesting(record: false, macros: ["LoremSwiftifyMacros": LoremSwiftifyMacro.self]) {
-            super.invokeTest()
-        }
-        #else
-        fatalError("Macro tests can only be run on the host platform!")
-        #endif
+extension XCTestCase {
+    func assertMacro(
+      _ originalSource: String,
+      expandedSource expectedExpandedSource: String,
+      diagnostics: [DiagnosticSpec] = [],
+      applyFixIts: [String]? = nil,
+      fixedSource expectedFixedSource: String? = nil
+    ) {
+        assertMacroExpansion(
+            originalSource,
+            expandedSource: expectedExpandedSource,
+            diagnostics: diagnostics,
+            macros: testMacros,
+            applyFixIts: applyFixIts,
+            fixedSource: expectedFixedSource
+        )
     }
 }

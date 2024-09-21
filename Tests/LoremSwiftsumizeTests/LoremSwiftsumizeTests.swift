@@ -1,6 +1,5 @@
-import MacroTesting
 import XCTest
 
-final class LoremSwiftifyTests: MacroTestCase {
+final class LoremSwiftifyTests: XCTestCase {
 
 }
