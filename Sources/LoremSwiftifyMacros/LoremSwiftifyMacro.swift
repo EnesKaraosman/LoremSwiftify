@@ -24,10 +24,7 @@ public enum LoremSwiftifyMacro: ExtensionMacro {
         if !declaration.is(StructDeclSyntax.self)
             && !declaration.is(ClassDeclSyntax.self)
             && !declaration.is(EnumDeclSyntax.self) {
-
-            context.diagnose(.init(node: declaration, message: LoremSwiftifyMacroDiagnostic.unsupportedType))
-
-            return []
+            throw LoremSwiftifyMacroDiagnostic.unsupportedType
         }
 
         let extensionDecl = try ExtensionDeclSyntax(
@@ -45,18 +42,14 @@ public enum LoremSwiftifyMacro: ExtensionMacro {
                         in: context,
                         type: type
                     )
-                }
-                
-                if let structDecl = declaration.as(StructDeclSyntax.self) {
+                } else if let structDecl = declaration.as(StructDeclSyntax.self) {
                     try LoremSwiftifyStruct.expansion(
                         of: node,
                         providingMembersOf: structDecl,
                         in: context,
                         type: type
                     )
-                }
-                
-                if let enumDecl = declaration.as(EnumDeclSyntax.self) {
+                } else if let enumDecl = declaration.as(EnumDeclSyntax.self) {
                     try LoremSwiftifyEnum.expansion(
                         of: node,
                         providingMembersOf: enumDecl,

@@ -19,9 +19,7 @@ class LoremSwiftifyClass {
         type: some SwiftSyntax.TypeSyntaxProtocol
     ) throws -> DeclSyntax {
         if declaration.memberBlock.members.isEmpty {
-            context.diagnose(.init(node: declaration, message: LoremSwiftifyMacroDiagnostic.noMemberToMock))
-            
-            return ""
+            throw LoremSwiftifyMacroDiagnostic.noMemberToMock
         }
 
         return try LoremSwiftifyMacroParsingShared.handleClassOrStructDeclSyntax(
