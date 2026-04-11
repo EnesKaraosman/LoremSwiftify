@@ -10,9 +10,15 @@ import XCTest
 
 #if canImport(LoremSwiftifyMacros)
 import LoremSwiftifyMacros
+import SwiftSyntax
+import SwiftSyntaxMacroExpansion
 
-let testMacros: [String: Macro.Type] = [
-    "LoremSwiftifyMacros": LoremSwiftifyMacro.self
+let testMacroSpecs: [String: MacroSpec] = [
+    "LoremSwiftify": MacroSpec(
+        type: LoremSwiftifyMacro.self,
+        conformances: ["LoremIpsumize"]
+    ),
+    "Lorem": MacroSpec(type: LoremMacro.self),
 ]
 #endif
 
@@ -28,7 +34,7 @@ extension XCTestCase {
             originalSource,
             expandedSource: expectedExpandedSource,
             diagnostics: diagnostics,
-            macros: testMacros,
+            macroSpecs: testMacroSpecs,
             applyFixIts: applyFixIts,
             fixedSource: expectedFixedSource
         )

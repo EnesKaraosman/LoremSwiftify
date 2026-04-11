@@ -16,7 +16,8 @@ class LoremSwiftifyStruct {
         of node: AttributeSyntax,
         providingMembersOf declaration: StructDeclSyntax,
         in context: some MacroExpansionContext,
-        type: some SwiftSyntax.TypeSyntaxProtocol
+        type: some SwiftSyntax.TypeSyntaxProtocol,
+        accessModifier: DeclModifierSyntax? = nil
     ) throws -> DeclSyntax {
         if declaration.memberBlock.members.isEmpty {
             throw LoremSwiftifyMacroDiagnostic.noMemberToMock
@@ -26,7 +27,8 @@ class LoremSwiftifyStruct {
             selfName: "\(type)",
             members: declaration.memberBlock.members,
             in: context,
-            isClass: false
+            isClass: false,
+            accessModifier: accessModifier
         )
     }
 }

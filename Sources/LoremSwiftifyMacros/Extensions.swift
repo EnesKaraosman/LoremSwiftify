@@ -117,15 +117,19 @@ extension VariableDeclSyntax {
             let loremAttribute,
             let expression = loremAttribute
                 .arguments?.as(LabeledExprListSyntax.self)?
-                .first?.expression.as(FunctionCallExprSyntax.self),
-            let outerEnumRawValue = expression.calledExpression.as(MemberAccessExprSyntax.self)?
-                .declName.baseName.text,
-            let innerEnumRawValue = expression.arguments
-                .first?.expression.as(MemberAccessExprSyntax.self)?
-                .declName.baseName.text
+                .first?.expression
         else { return nil }
 
-        return ".\(outerEnumRawValue)(.\(innerEnumRawValue))"
+        return "\(expression.trimmed)"
+    }
+}
+
+extension DeclGroupSyntax {
+    var accessLevelModifier: DeclModifierSyntax? {
+        let accessKeywords: Set<Keyword> = [.public, .internal, .fileprivate, .private, .open, .package]
+        return modifiers.first { modifier in
+            accessKeywords.contains(where: { modifier.name.tokenKind == .keyword($0) })
+        }
     }
 }
 

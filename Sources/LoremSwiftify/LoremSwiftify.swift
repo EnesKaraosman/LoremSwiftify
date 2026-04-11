@@ -2,7 +2,7 @@
 // https://docs.swift.org/swift-book
 
 /// A macro that produces mock values for its properties
-@attached(extension, conformances: LoremIpsumize, names: named(lorem))
+@attached(extension, conformances: LoremIpsumize, names: named(lorem), named(loremFixed))
 public macro LoremSwiftify() = #externalMacro(module: "LoremSwiftifyMacros", type: "LoremSwiftifyMacro")
 
 @attached(peer)

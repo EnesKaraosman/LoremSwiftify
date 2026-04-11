@@ -27,6 +27,8 @@ public enum LoremSwiftifyMacro: ExtensionMacro {
             throw LoremSwiftifyMacroDiagnostic.unsupportedType
         }
 
+        let accessModifier = declaration.accessLevelModifier
+
         let extensionDecl = try ExtensionDeclSyntax(
             extendedType: type,
             inheritanceClause: InheritanceClauseSyntax(
@@ -40,21 +42,24 @@ public enum LoremSwiftifyMacro: ExtensionMacro {
                         of: node,
                         providingMembersOf: classDecl,
                         in: context,
-                        type: type
+                        type: type,
+                        accessModifier: accessModifier
                     )
                 } else if let structDecl = declaration.as(StructDeclSyntax.self) {
                     try LoremSwiftifyStruct.expansion(
                         of: node,
                         providingMembersOf: structDecl,
                         in: context,
-                        type: type
+                        type: type,
+                        accessModifier: accessModifier
                     )
                 } else if let enumDecl = declaration.as(EnumDeclSyntax.self) {
                     try LoremSwiftifyEnum.expansion(
                         of: node,
                         providingMembersOf: enumDecl,
                         in: context,
-                        type: type
+                        type: type,
+                        accessModifier: accessModifier
                     )
                 }
             }

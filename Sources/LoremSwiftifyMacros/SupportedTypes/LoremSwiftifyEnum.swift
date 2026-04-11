@@ -16,7 +16,8 @@ class LoremSwiftifyEnum {
         of node: AttributeSyntax,
         providingMembersOf declaration: EnumDeclSyntax,
         in context: some MacroExpansionContext,
-        type: some SwiftSyntax.TypeSyntaxProtocol
+        type: some SwiftSyntax.TypeSyntaxProtocol,
+        accessModifier: DeclModifierSyntax? = nil
     ) throws -> DeclSyntax {
         let cases = declaration.memberBlock.members.compactMap {
             $0.decl.as(EnumCaseDeclSyntax.self)
@@ -26,26 +27,59 @@ class LoremSwiftifyEnum {
             throw LoremSwiftifyMacroDiagnostic.noEnumCase
         }
 
-        let caseExpr = generateEnumCreationFunctionBody(for: cases)
+        let randomCaseExpr = generateEnumCreationFunctionBody(for: cases, fixed: false)
+        let firstCaseExpr = generateEnumCreationFunctionBody(for: cases, fixed: true)
 
-        let funcDecl = try FunctionDeclSyntax(
-            modifiers: [
-                .init(name: .keyword(.public)), // TODO: Add if type is public
-                .init(name: .keyword(.static))
-            ],
+        var modifiers: DeclModifierListSyntax = [
+            .init(name: .keyword(.static))
+        ]
+        if let accessModifier {
+            modifiers = [accessModifier, .init(name: .keyword(.static))]
+        }
+
+        let returnClause = ReturnClauseSyntax(type: IdentifierTypeSyntax(name: .identifier("Self")))
+        let emptyParams = try FunctionParameterClauseSyntax(validating: .init(parameters: []))
+
+        let loremFunc = try FunctionDeclSyntax(
+            modifiers: modifiers,
             name: "lorem",
             signature: FunctionSignatureSyntax(
-                parameterClause: FunctionParameterClauseSyntax(validating: .init(parameters: [])),
-                returnClause: ReturnClauseSyntax(type: IdentifierTypeSyntax(name: .identifier("Self")))
+                parameterClause: emptyParams,
+                returnClause: returnClause
             ),
-            body: CodeBlockSyntax(statements: .init(stringLiteral: "\(type)\(caseExpr)"))
+            body: CodeBlockSyntax(statements: .init(stringLiteral: "\(type)\(randomCaseExpr)"))
         )
 
-        return DeclSyntax(funcDecl)
+        let loremFixedFunc = try FunctionDeclSyntax(
+            modifiers: modifiers,
+            name: "loremFixed",
+            signature: FunctionSignatureSyntax(
+                parameterClause: emptyParams,
+                returnClause: returnClause
+            ),
+            body: CodeBlockSyntax(statements: .init(stringLiteral: "\(type)\(firstCaseExpr)"))
+        )
+
+        let ifConfigDecl = IfConfigDeclSyntax(
+            clauses: IfConfigClauseListSyntax {
+                IfConfigClauseSyntax(
+                    poundKeyword: .poundIfToken(),
+                    condition: ExprSyntax(DeclReferenceExprSyntax(baseName: .identifier("DEBUG"))),
+                    elements: .decls(MemberBlockItemListSyntax {
+                        MemberBlockItemSyntax(decl: loremFunc)
+                        MemberBlockItemSyntax(decl: loremFixedFunc)
+                    })
+                )
+            },
+            poundEndif: .poundEndifToken()
+        )
+
+        return DeclSyntax(ifConfigDecl)
     }
 
     static private func generateEnumCreationFunctionBody(
-        for cases: [EnumCaseDeclSyntax]
+        for cases: [EnumCaseDeclSyntax],
+        fixed: Bool
     ) -> ExprSyntax {
         var exprSyntaxArray: [ExprSyntax] = []
 
@@ -66,7 +100,7 @@ class LoremSwiftifyEnum {
                                 name: .identifier(caseItem.name)
                             ),
                             leftParen: .leftParenToken(),
-                            arguments: getArguments(parameters),
+                            arguments: getArguments(parameters, fixed: fixed),
                             rightParen: .rightParenToken()
                         )
                     )
@@ -83,14 +117,18 @@ class LoremSwiftifyEnum {
             }
         }
 
+        if fixed {
+            return exprSyntaxArray.first!
+        }
         return exprSyntaxArray.randomElement()!
     }
 
-    static private func getArguments(_ parameters: [ParameterItem]) -> LabeledExprListSyntax {
+    static private func getArguments(_ parameters: [ParameterItem], fixed: Bool) -> LabeledExprListSyntax {
+        let loremCall = fixed ? ".loremFixed()" : ".lorem()"
         let parameterList = parameters.map { parameter -> LabeledExprSyntax in
-            let expression = ExprSyntax(stringLiteral: ".lorem()")
+            let expression = ExprSyntax(stringLiteral: loremCall)
             let isNotLast = parameter.identifierType != parameters.last?.identifierType
-            
+
             return LabeledExprSyntax(
                 label: parameter.hasName ? .identifier(parameter.identifierName!) : nil,
                 colon: parameter.hasName ? .colonToken() : nil,

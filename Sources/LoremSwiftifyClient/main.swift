@@ -29,6 +29,7 @@ class Book {
     }
 }
 
+print("--- Book ---")
 print(Book.lorem())
 
 @LoremSwiftify
@@ -62,4 +63,95 @@ struct Hotel {
     }
 }
 
+print("\n--- Hotel ---")
 print(Hotel.lorem())
+
+// MARK: - New Features Showcase
+
+@LoremSwiftify
+struct Employee {
+    @Lorem(.string(.firstName))
+    let firstName: String
+
+    @Lorem(.string(.lastName))
+    let lastName: String
+
+    @Lorem(.string(.email))
+    let email: String
+
+    @Lorem(.string(.company))
+    let company: String
+
+    @Lorem(.string(.jobTitle))
+    let jobTitle: String
+
+    @Lorem(.string(.address))
+    let address: String
+
+    @Lorem(.string(.city))
+    let city: String
+
+    @Lorem(.string(.country))
+    let country: String
+
+    @Lorem(.string(.username))
+    let username: String
+
+    @Lorem(.int(.range(min: 18, max: 65)))
+    let age: Int
+
+    @Lorem(.double(.range(min: 30000.0, max: 150000.0)))
+    let salary: Double
+
+    @Lorem(.url(.avatar))
+    let avatarURL: URL
+
+    let tags: Set<String>
+}
+
+print("\n--- Employee ---")
+let employee = Employee.lorem()
+print("Name: \(employee.firstName) \(employee.lastName)")
+print("Email: \(employee.email)")
+print("Company: \(employee.company)")
+print("Job: \(employee.jobTitle)")
+print("Location: \(employee.address), \(employee.city), \(employee.country)")
+print("Username: \(employee.username)")
+print("Age: \(employee.age)")
+print("Salary: \(String(format: "%.2f", employee.salary))")
+print("Avatar: \(employee.avatarURL)")
+print("Tags: \(employee.tags)")
+
+@LoremSwiftify
+struct Article {
+    @Lorem(.string(.sentence))
+    let title: String
+
+    @Lorem(.string(.paragraph))
+    let body: String
+
+    let metadata: Data
+}
+
+print("\n--- Article ---")
+let article = Article.lorem()
+print("Title: \(article.title)")
+print("Body: \(article.body.prefix(80))...")
+print("Metadata size: \(article.metadata.count) bytes")
+
+// MARK: - Batch Generation
+
+print("\n--- Batch Generation (3 employees) ---")
+let employees = Employee.lorem(count: 3)
+for (i, emp) in employees.enumerated() {
+    print("  [\(i + 1)] \(emp.firstName) \(emp.lastName) - \(emp.email)")
+}
+
+// MARK: - Deterministic Mode
+
+print("\n--- Deterministic Mode ---")
+let fixed1 = Employee.loremFixed()
+let fixed2 = Employee.loremFixed()
+print("Fixed #1: \(fixed1.firstName) \(fixed1.lastName), age \(fixed1.age), salary \(String(format: "%.2f", fixed1.salary))")
+print("Fixed #2: \(fixed2.firstName) \(fixed2.lastName), age \(fixed2.age), salary \(String(format: "%.2f", fixed2.salary))")
+print("Identical? \(fixed1.firstName == fixed2.firstName && fixed1.age == fixed2.age)")

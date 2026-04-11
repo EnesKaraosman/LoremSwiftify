@@ -16,55 +16,92 @@ enum LoremSwiftifyMacroParsingShared {
         selfName: String,
         members: MemberBlockItemListSyntax,
         in context: some SwiftSyntaxMacros.MacroExpansionContext,
-        isClass: Bool
+        isClass: Bool,
+        accessModifier: DeclModifierSyntax? = nil
     ) throws -> DeclSyntax {
-        var funcBody = ""
+        var loremBody = ""
+        var loremFixedBody = ""
 
         // Use default init if exist
         if let initDeclSynax = members.initializerDeclSyntax {
             let parameters = initDeclSynax.signature.parameterClause.parameters
 
-            funcBody = fillInitCode(initName: selfName, parameters: parameters)
+            loremBody = fillInitCode(initName: selfName, parameters: parameters, fixed: false)
+            loremFixedBody = fillInitCode(initName: selfName, parameters: parameters, fixed: true)
         } else {
             // There is no default init, so create one
             let variableDecls = members
                 .compactMap { $0.decl.as(VariableDeclSyntax.self) }
                 .filter(\.isStoredProperty)
 
-            funcBody = generateInitCode(initName: selfName, variableDecls: variableDecls)
+            loremBody = generateInitCode(initName: selfName, variableDecls: variableDecls, fixed: false)
+            loremFixedBody = generateInitCode(initName: selfName, variableDecls: variableDecls, fixed: true)
         }
 
         if isClass {
-            funcBody.append(" as! Self")
+            loremBody.append(" as! Self")
+            loremFixedBody.append(" as! Self")
         }
 
-        let funcDecl = try FunctionDeclSyntax(
-            modifiers: [
-                .init(name: .keyword(.public)), // TODO: Add if type is public
-                .init(name: .keyword(.static))
-            ],
+        var modifiers: DeclModifierListSyntax = [
+            .init(name: .keyword(.static))
+        ]
+        if let accessModifier {
+            modifiers = [accessModifier, .init(name: .keyword(.static))]
+        }
+
+        let returnClause = ReturnClauseSyntax(type: IdentifierTypeSyntax(name: .identifier("Self")))
+        let emptyParams = try FunctionParameterClauseSyntax(validating: .init(parameters: []))
+
+        let loremFunc = try FunctionDeclSyntax(
+            modifiers: modifiers,
             name: "lorem",
             signature: FunctionSignatureSyntax(
-                parameterClause: FunctionParameterClauseSyntax(validating: .init(parameters: [])),
-                returnClause: ReturnClauseSyntax(type: IdentifierTypeSyntax(name: .identifier("Self")))
+                parameterClause: emptyParams,
+                returnClause: returnClause
             ),
-            body: CodeBlockSyntax(statements: .init(stringLiteral: funcBody))
+            body: CodeBlockSyntax(statements: .init(stringLiteral: loremBody))
         )
 
-        return DeclSyntax(funcDecl)
+        let loremFixedFunc = try FunctionDeclSyntax(
+            modifiers: modifiers,
+            name: "loremFixed",
+            signature: FunctionSignatureSyntax(
+                parameterClause: emptyParams,
+                returnClause: returnClause
+            ),
+            body: CodeBlockSyntax(statements: .init(stringLiteral: loremFixedBody))
+        )
+
+        let ifConfigDecl = IfConfigDeclSyntax(
+            clauses: IfConfigClauseListSyntax {
+                IfConfigClauseSyntax(
+                    poundKeyword: .poundIfToken(),
+                    condition: ExprSyntax(DeclReferenceExprSyntax(baseName: .identifier("DEBUG"))),
+                    elements: .decls(MemberBlockItemListSyntax {
+                        MemberBlockItemSyntax(decl: loremFunc)
+                        MemberBlockItemSyntax(decl: loremFixedFunc)
+                    })
+                )
+            },
+            poundEndif: .poundEndifToken()
+        )
+
+        return DeclSyntax(ifConfigDecl)
     }
 
     // MARK: - Fill existing init
     static func fillInitCode(
         initName: String,
-        parameters: FunctionParameterListSyntax
+        parameters: FunctionParameterListSyntax,
+        fixed: Bool
     ) -> String {
         var initialCode: String = "\(initName)("
 
         for parameter in parameters {
             let name = parameter.firstName.text
 
-            let lorem = ".lorem()"
+            let lorem = fixed ? ".loremFixed()" : ".lorem()"
 
             let value = parameter.defaultValue?.value ?? "\(raw: lorem)"
             initialCode.append("\n\(name): \(value), ")
@@ -79,16 +116,17 @@ enum LoremSwiftifyMacroParsingShared {
     // MARK: - Generate init
     static func generateInitCode(
         initName: String,
-        variableDecls: [VariableDeclSyntax]
+        variableDecls: [VariableDeclSyntax],
+        fixed: Bool
     ) -> String {
         var initialCode: String = "\(initName)("
 
         for variable in variableDecls where !variable.isInitialized {
             guard let pattern = variable.bindings.first?.pattern else { continue }
-            
-            var lorem = ".lorem()"
 
-            if let loremAttributeKindString = variable.loremAttributeKindString {
+            var lorem = fixed ? ".loremFixed()" : ".lorem()"
+
+            if !fixed, let loremAttributeKindString = variable.loremAttributeKindString {
                 lorem = ".lorem(\(loremAttributeKindString))"
             }
 
