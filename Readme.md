@@ -1,6 +1,13 @@
 # LoremSwiftify
 
-A Swift macro that automatically generates mock/lorem ipsum data for your types. Annotate any `struct`, `class`, or `enum` with `@LoremSwiftify` and get a `lorem()` static method for free.
+[![Swift 5.9+](https://img.shields.io/badge/Swift-5.9+-orange.svg)](https://swift.org)
+[![Platforms](https://img.shields.io/badge/Platforms-iOS%2013+%20|%20macOS%2012+%20|%20tvOS%2013+%20|%20watchOS%206+-blue.svg)](https://developer.apple.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![CI](https://github.com/EnesKaraosman/LoremSwiftify/actions/workflows/swift.yml/badge.svg)](https://github.com/EnesKaraosman/LoremSwiftify/actions/workflows/swift.yml)
+
+A Swift macro that generates realistic mock/fake data for structs, classes, and enums — perfect for SwiftUI previews and snapshot tests.
+
+Annotate any type with `@LoremSwiftify` and get `.lorem()` for random data, `.loremFixed()` for deterministic data, and `.lorem(count:)` for batch generation.
 
 ## Installation
 
@@ -8,7 +15,7 @@ Add LoremSwiftify as a dependency in your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/EnesKaraosman/LoremSwiftify", from: "0.1.0")
+    .package(url: "https://github.com/EnesKaraosman/LoremSwiftify", from: "1.0.0")
 ]
 ```
 

@@ -1,0 +1,11 @@
+version: 1
+builder:
+  configs:
+    - platform: macosSpm
+      swift_version: "5.9"
+    - platform: ios
+      swift_version: "5.9"
+    - platform: tvos
+      swift_version: "5.9"
+    - platform: watchos
+      swift_version: "5.9"

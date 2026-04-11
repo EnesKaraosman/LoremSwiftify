@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.1] - 2026-04-11
+
+### Improvements
+- Add CI, Swift version, platforms, and license badges to README
+- Fix installation version in README
+- Add `.spi.yml` for Swift Package Index compatibility
+- Add bug report and feature request issue templates
+- Add pull request template
+- Update repo description and topics for discoverability
+- Enable GitHub Discussions
+
 ## [1.0.0] - 2026-04-11
 
 ### Breaking Changes
